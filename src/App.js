@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
-
+import logo from "./logo.svg";
+import "./App.css";
+import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import Todoitem from "./components/Todoitem";
 function App() {
+  const [todo, SetTodo] = useState("");
+  const [TodoArray, SetTodoArray] = useState([]);
+
+  const removeTodo = (id) => {
+    SetTodoArray(TodoArray.filter((elem) => elem.id !== id));
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+      <form>
+        {" "}
+        <input onChange={(e) => SetTodo(e.target.value)} value={todo} />
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            SetTodoArray([
+              ...TodoArray,
+              {
+                id: uuidv4(),
+                task: todo,
+              },
+            ]);
+            SetTodo("");
+          }}
         >
-          Learn React
-        </a>
-      </header>
+          ADD
+        </button>
+      </form>
+      <ul>
+        {TodoArray.map((todoitem) => (
+          <Todoitem key={todoitem.id} data={todoitem} delete={removeTodo} />
+        ))}
+      </ul>
     </div>
   );
 }
-
 export default App;
